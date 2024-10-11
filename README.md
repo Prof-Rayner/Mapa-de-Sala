@@ -1,6 +1,8 @@
 # Mapa de Sala
 ferramenta criada para gerenciamento de reserva de mapa de sala no Senac Sorocaba
 
+![alt text](.github/imagens/repository-open-graph-template.png)
+
 ## Rodando localmente
 
 #### Configure o ambiente virtual
