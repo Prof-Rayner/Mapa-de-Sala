@@ -15,12 +15,14 @@ from .editarCurso import EditarCurso
 from .editarLogin import EditarLogin
 from .editarReserva import EditarReserva
 from .editarSala import EditarSala
-
 from .reserva import ReservaInterface
+
+from App.controller.login import pegarUsuarioLogado, removerUsuarioLogado
 
 
 class HomePrincipal(QMainWindow):
     def __init__(self):
+        print('User:', pegarUsuarioLogado())
         super().__init__()
         loadUi('App/view/ui/home.ui',self)
         self.moving = False
@@ -28,8 +30,7 @@ class HomePrincipal(QMainWindow):
         self.subMenuQuebrado.hide()
         self.btnHome.setChecked(True)
         
-   # Criando parte interativa do menu
-   
+        # Criando parte interativa do menu
         self.btnMenu: QPushButton
         self.subMenuLateral: QWidget
         self.subMenuQuebrado: QWidget
@@ -38,10 +39,9 @@ class HomePrincipal(QMainWindow):
         self.busca: QWidget
         self.editar: QWidget
         self.menuSimples: QWidget
-        
         self.btnHome: QPushButton
 
-   # Criando instancias das interfaces
+        # Criando instancias das interfaces
         self.setWindowFlags(Qt.FramelessWindowHint)
         self.interfCasPessoa = cadastroPessoas
         self.interfcasSala = CadastrarSalas
@@ -57,8 +57,7 @@ class HomePrincipal(QMainWindow):
         self.interfEditReserva = EditarReserva
         self.interfEditSala = EditarSala
 
-        
-    #Telas dentro do menu para alterar as janelas pelo sub menu
+        #Telas dentro do menu para alterar as janelas pelo sub menu
         self.btnPessoa.clicked.connect(lambda: self.trocarTelaMenu(self.cadastros))
         self.btnPessoas.clicked.connect(lambda: self.trocarTelaMenu(self.cadastros))
         self.btnBusca.clicked.connect(lambda: self.trocarTelaMenu(self.busca))
@@ -66,8 +65,7 @@ class HomePrincipal(QMainWindow):
         self.btnEditarSimples.clicked.connect(lambda: self.trocarTelaMenu(self.editar)) 
         self.btnEditar.clicked.connect(lambda: self.trocarTelaMenu(self.editar)) 
         
-    #btns da propria interface
-    
+        # btns da propria interface
         # Forma Corrigida para Setar Interface
         #######################################
         self.btnIncio.clicked.connect(lambda: self.setInterfaceOnHome(self.inicio))
@@ -89,11 +87,13 @@ class HomePrincipal(QMainWindow):
 
         self.btnConfiguracoes.clicked.connect(lambda: self.setInterfaceOnHome(self.interfCongiguracoes))
         self.btnConfig.clicked.connect(lambda: self.setInterfaceOnHome(self.interfCongiguracoes))
+        self.btnSair.clicked.connect(self.fazer_logout)
+        self.btnSairSimples.clicked.connect(self.fazer_logout)
         #######################################
 
         self.btnMinimizar.clicked.connect(self.showMinimized)
-        self.btnFecharPagina.clicked.connect(self.close)
         self.btnTelaCheia.clicked.connect(self.windowConnect)
+        self.btnFecharPagina.clicked.connect(self.close)
         
     ################################
     # Função correta para inserir interface
@@ -144,7 +144,6 @@ class HomePrincipal(QMainWindow):
             self.subMenuQuebrado.show()
             self.menuQuebrado.setCurrentWidget(menu)
             
-
     def mousePressEvent(self, event):
         if event.button() == Qt.LeftButton:
             if self.childAt(event.pos()) == self.cabecalho:  
@@ -172,15 +171,19 @@ class HomePrincipal(QMainWindow):
                                            icon: url("App/view/ui/icones/iconRestaurarTamanhoTela.png");
                                         }"""
                                     )
+                    
     def mouseReleaseEvent(self, event):
         self.moving = False
 
-    
     @pyqtSlot()
     def on_btnFecharMenuQuebrado_clicked(self):
         self.subMenuQuebrado.hide()
-        
-        
+
+    def fazer_logout(self):
+        removerUsuarioLogado()
+        self.close()
+
+    
 if __name__ == "__main__":
     from PyQt5.QtWidgets import QApplication
     app = QApplication([])
